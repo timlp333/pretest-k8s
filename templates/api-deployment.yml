@@ -1,0 +1,28 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pretest-api-deploy
+  namespace: {{ include "system.namespace" . }}
+spec:
+  selector: 
+    matchLabels:
+      app: pretest-api
+  replicas: 1
+  template:  
+    metadata:
+      labels:
+        app: pretest-api
+    spec:
+      containers:
+      - name: pretest-api
+        image: asia-east1-docker.pkg.dev/refined-bolt-431903-u1/pretest/pretest-api:0.0.2
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "256Mi"
+            cpu: "500m"
+      imagePullSecrets:
+      - name: regcred # GCP 上的 pull image secret name

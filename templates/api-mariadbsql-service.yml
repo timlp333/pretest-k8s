@@ -1,0 +1,12 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ .Values.database.name }}-service
+  namespace: pretest #需要再確認
+spec:
+  type: ExternalName
+  externalName: {{ .Values.database.name }}-service.{{ .Values.database.namespace }}.svc.cluster.local
+  ports:
+  - port: 3306
+    protocol: TCP
+    targetPort: 3306

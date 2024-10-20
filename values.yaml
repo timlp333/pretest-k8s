@@ -1,0 +1,64 @@
+nameOverride: "pretest"
+namespaceOverride: "pretest"
+
+
+api:
+  name: "pretest-api"
+  replicaCount: 1
+  image:
+    repository: "asia-east1-docker.pkg.dev/refined-bolt-431903-u1/pretest/pretest-api"
+    tag: "0.0.1"
+    pullPolicy: IfNotPresent
+  resources:
+    limits:
+      cpu: "500m"
+      memory: "512Mi"
+    requests:
+      cpu: "250m"
+      memory: "256Mi"
+  service:
+    port: 8080
+  
+
+
+# Redis image configuration
+  name : "redis"
+  namespace: "redis-app"
+  command: "redis-server"
+  args: "--requirepass"
+  password: "$(REDIS_PASSWORD)"
+  replicaCount: 1
+  image:
+    repository: "docker.io/redis"
+    tag: "7.4.0"
+    pullPolicy: IfNotPresent
+  resources:
+    limits:
+      cpu: "100m"
+      memory: "128Mi"
+    requests:
+      cpu: "50m"
+      memory: "64Mi"
+  env:
+    redisPort: 6379
+    targetPort: 6379
+  service:
+    type: ClusterIP
+
+database:
+  name: "mariadb"
+  namespace: "mariadb"
+
+
+
+service:
+  # -- Deploy server name
+  name: server
+  # -- Server service type
+  type: ClusterIP
+  # -- Server service http port
+  servicePortHttp: 80
+  # -- Server service target port
+  serviceTargetPort: 8080
+  # -- Server service http port name, can be used to route traffic via istio
+  servicePortName: http
